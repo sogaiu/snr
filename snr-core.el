@@ -57,34 +57,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar snr-output-filter-in-progress nil)
-(defvar snr-output-filter-buffer nil)
-
 (defun snr-comint-end-of-output-p (output)
   "Return non-nil if OUTPUT ends with input prompt."
   (string-match (concat "\r?\n?" ; \r for macos
                         snr-prompt
                         (rx eos))
                 output))
-
-(defun snr-output-filter (string)
-  "Filter used in `snr-send-code-async' to capture output.
-STRING is the output received to this point from the process.
-This filter saves received output from the process in
-`snr-output-filter-buffer' and stops receiving it after
-detecting a prompt at the end of the buffer."
-  (setq snr-output-filter-buffer
-        (concat snr-output-filter-buffer
-                (ansi-color-filter-apply string)))
-  (when (snr-comint-end-of-output-p snr-output-filter-buffer)
-    ;; end of output marked by prompt in `snr-output-filter-buffer'
-    (setq snr-output-filter-in-progress nil)
-    (setq snr-output-filter-buffer
-          (substring snr-output-filter-buffer
-                     ;; `snr-comint-end-of-output-p' uses `string-match'
-                     0 (match-beginning 0))))
-  ;; don't let anything through to repl buffer
-  "")
 
 (defun snr-send-string (string &optional process)
   "Send STRING to Janet PROCESS."

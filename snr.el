@@ -144,12 +144,6 @@
   '()
   "List of buffers to clean up before executing `snr--helper'.")
 
-(defvar snr--run-under-gdb
-  nil
-  "If non-nil, start janet binary under the control of gdb.
-
-Requires the janet binary be built with debug symbols.")
-
 (defun snr--helper (start end)
   "Determine last paren expression by asking Janet.
 
