@@ -37,6 +37,8 @@
         (from-server-recv))
       (unless p
         (break))
+      # echo prompt
+      (file/write stdout p)
       (def line
         (getline p @"" root-env))
       (when (empty? line)
