@@ -3,6 +3,8 @@
 (import spork/msg)
 (import spork/netrepl)
 
+# slightly adapted bits from spork
+
 (defn make-recv-client
   "Similar to msg/make-recv, except has exceptions for out-of-band
   messages (those that begin with 0xFF and 0xFE."
@@ -21,7 +23,7 @@
       (string/slice x 1)
       x)))
 
-(defn cli-main
+(defn client
   [&opt host port name]
   (default host netrepl/default-host)
   (default port netrepl/default-port)
@@ -30,14 +32,13 @@
     (def from-server-recv (make-recv-client stream))
     (def to-server-send (msg/make-send stream))
     (to-server-send (string/format "\xFF%j" {:auto-flush true :name name}))
-    (def gl getline)
     (forever
       (def p
         (from-server-recv))
       (unless p
         (break))
       (def line
-        (gl p @"" root-env))
+        (getline p @"" root-env))
       (when (empty? line)
         (break))
       (to-server-send
@@ -47,4 +48,4 @@
 
 (defn main
   [& args]
-  (cli-main))
+  (client))
