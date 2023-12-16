@@ -237,33 +237,6 @@ a column zero target."
   (interactive)
   (pop-to-buffer snr-repl-buffer-name))
 
-(defun snr-repl-buffer-new-frame ()
-  "Create a new frame and switch to the repl buffer in it."
-  (interactive)
-  (select-frame-set-input-focus (make-frame-command))
-  (switch-to-buffer (get-buffer snr-repl-buffer-name)))
-
-(defun snr-set-pretty-format ()
-  "Set :pretty-format to multiline."
-  (interactive)
-  (snr-send-code "(setdyn :pretty-format \"%.20M\")"))
-
-(defun snr-insert-last-output ()
-  "Insert last evaluation result."
-  (interactive)
-  (let ((original-buffer (current-buffer))
-        (repl-buffer (get-buffer snr-repl-buffer-name))
-        (last-output ""))
-    (if (not repl-buffer)
-        (message (format "%s is missing..." snr-repl-buffer-name))
-      ;; switch to snr buffer to prepare for appending
-      (set-buffer repl-buffer)
-      (setq last-output
-            (buffer-substring-no-properties comint-last-input-end
-                                            (nth 0 comint-last-prompt)))
-      (set-buffer original-buffer)
-      (insert last-output))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar snr-interaction-mode-map
@@ -271,8 +244,6 @@ a column zero target."
     (define-key map "\C-c\C-b" 'snr-send-buffer)
     (define-key map "\C-x\C-e" 'snr-send-expression-at-point)
     (define-key map "\C-c\C-r" 'snr-send-region)
-    (define-key map "\C-c\C-i" 'snr-insert-last-output)
-    (define-key map "\C-c\C-n" 'snr-repl-buffer-new-frame)
     (define-key map "\C-c\C-z" 'snr-switch-to-repl)
     (easy-menu-define snr-interaction-mode-map map
       "SNR Interaction Mode Menu"
@@ -281,11 +252,7 @@ a column zero target."
         ["Send expression at point" snr-send-expression-at-point t]
         ["Send region" snr-send-region t]
         "--"
-        ["Insert last output" snr-insert-last-output t]
-        "--"
         ["Start REPL" snr t]
-        ["Multiline Formatting" snr-set-pretty-format t]
-        ["New Frame with REPL" snr-repl-buffer-new-frame t]
         ["Switch to REPL" snr-switch-to-repl t]))
     map)
   "SNR interaction mode map.")
