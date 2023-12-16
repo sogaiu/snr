@@ -15,6 +15,10 @@
 
 ;;;;; Manual
 
+;;  Having janet's spork library installed may be helpful for starting
+;;  a netrepl server.  If you have some other way of providing a
+;;  netrepl server, the spork library should not be necessary.
+;;
 ;;  Add the directory this file is in to your load-path.
 ;;
 ;;  Put this in your relevant init file:
@@ -22,6 +26,11 @@
 ;;    (require 'snr)
 ;;
 ;;  Optionally, add:
+;;
+;;    (add-hook 'janet-ts-mode-hook
+;;              #'snr-interaction-mode)
+;;
+;;    or
 ;;
 ;;    (add-hook 'janet-mode-hook
 ;;              #'snr-interaction-mode)
@@ -35,19 +44,21 @@
 
 ;;;; Usage
 
-;; -1. Get a spork netrepl server running somewhere.
+;; 0. Get a spork netrepl server running (e.g. from a project's root
+;;    directory).  One way to do this is via spork's janet-netrepl
+;;    command:
 ;;
-;;     cd project && janet -e '(import spork/netrepl) (netrepl/server)'
+;;     cd project && janet-netrepl
 
-;; 0. Open a Janet file
+;; 1. Open a Janet file from the project in Emacs.
 
-;; 1. Start an interactive REPL for Janet by:
+;; 2. Start an interactive REPL for Janet by:
 ;;
 ;;      M-x snr
 ;;
-;;    A buffer for a Janet repl should appear.
+;;    A repl buffer (*snr-repl*) should appear.
 
-;; 2. For editor features, in a relevant buffer with a Janet source file:
+;; 3. For editor features, in a relevant buffer with a Janet source file:
 ;;
 ;;      M-x snr-interaction-mode
 ;;
