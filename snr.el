@@ -45,7 +45,7 @@
 ;;;; Usage
 
 ;; 0. Get a spork netrepl server running (e.g. from a project's root
-;;    directory).  One way to do this is via spork's janet-netrepl
+;;    directory [1]).  One way to do this is via spork's janet-netrepl
 ;;    command:
 ;;
 ;;     cd project && janet-netrepl
@@ -72,6 +72,10 @@
 ;;
 ;;      Start REPL
 ;;      Switch to REPL
+
+;; [1] Paths in import, use, and require forms get resolved via the
+;;     directory janet-netrepl is started in, so adjust where janet-netrepl
+;;     is started accordingly.
 
 ;;;;; Acknowledgments
 
@@ -102,9 +106,35 @@
 ;;;; Requirements
 
 (require 'comint)
-(require 'snr-core)
+(require 'subr-x)
 
 ;;;; The Rest
+
+(defgroup snr nil
+  "Spork Netrepl REPL"
+  :prefix "snr-"
+  :group 'applications)
+
+(defvar snr-repl-buffer-name "*snr-repl*"
+  "Name of repl buffer.")
+
+(defun snr-send-code (code-str)
+  "Send CODE-STR to Janet repl."
+  (interactive "sCode: ")
+  (let ((here (point))
+        (original-buffer (current-buffer))
+        (repl-buffer (get-buffer snr-repl-buffer-name)))
+    (if (not repl-buffer)
+        (message (format "%s is missing..." snr-repl-buffer-name))
+      ;; switch to snr buffer to prepare for appending
+      (set-buffer repl-buffer)
+      (goto-char (point-max))
+      (insert code-str)
+      (comint-send-input)
+      (set-buffer original-buffer)
+      (if (eq original-buffer repl-buffer)
+          (goto-char (point-max))
+        (goto-char here)))))
 
 (defun snr-send-region (start end)
   "Send a region bounded by START and END."
