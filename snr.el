@@ -164,17 +164,17 @@
 (defvar snr--helper-path
   (expand-file-name
    (concat (expand-file-name
-	    (file-name-directory (or load-file-name
-				     buffer-file-name)))
-	   "snr/last-expression.janet"))
+            (file-name-directory (or load-file-name
+                                     buffer-file-name)))
+           "snr/last-expression.janet"))
   "Path to helper program to determine last paren expression.")
 
 (defvar snr--proxy-path
   (expand-file-name
    (concat (expand-file-name
-	    (file-name-directory (or load-file-name
-				     buffer-file-name)))
-	   "netrepl-proxy.janet"))
+            (file-name-directory (or load-file-name
+                                     buffer-file-name)))
+           "netrepl-proxy.janet"))
   "Path to netrepl proxy.")
 
 (defvar snr--debug-output
@@ -300,10 +300,10 @@ a column zero target."
 
 (defvar snr-mode-map
   (let ((map (copy-keymap comint-mode-map)))
-        (easy-menu-define snr-mode-map map
-          "A Janet REPL Mode Menu"
-          '("Snr"
-            ["Switch to other window" other-window t]))
+    (easy-menu-define snr-mode-map map
+      "A Janet REPL Mode Menu"
+      '("Snr"
+        ["Switch to other window" other-window t]))
     map)
   "Snr mode map.")
 
